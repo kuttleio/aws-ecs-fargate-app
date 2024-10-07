@@ -64,34 +64,8 @@ resource aws_ecs_service main {
     }
   }
 
-  service_registries {
-    registry_arn = aws_service_discovery_service.main.arn
-  }
-
   lifecycle {
     ignore_changes = [desired_count]
-  }
-}
-
-# ---------------------------------------------------
-#     Service Discovery
-# ---------------------------------------------------
-resource aws_service_discovery_service main {
-  name = "${var.name_prefix}-${var.zenv}-${var.service_name}"
-  tags = merge(var.standard_tags, tomap({ Name = var.service_name }))
-
-  dns_config {
-    namespace_id   = var.service_discovery_id
-    routing_policy = "MULTIVALUE"
-
-    dns_records {
-      ttl  = 10
-      type = "A"
-    }
-  }
-
-  health_check_custom_config {
-    failure_threshold = 1
   }
 }
 
